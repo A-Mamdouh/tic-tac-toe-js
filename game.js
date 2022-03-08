@@ -45,6 +45,11 @@ class Game {
       // Update status text
       this.setStatus(`${this.turnX? 'O' : 'X'} Wins!`)
     }
+    // Check for draw
+    if((this.Xs | this.Os) === ((1 << 9) - 1)) {
+      this.gameOver = true
+      this.setStatus('Draw!')
+    }
   }
 
   attachListener (cell, row, col) {
@@ -57,14 +62,14 @@ class Game {
         this.newGame()
       }
       // Check if it's X's turn and the cell is not occupied by O
-      if(this.turnX && (this.Os ^ cellMask)) {
+      if(this.turnX && !(this.Os & cellMask)) {
         // Set the cell bit to 1 in X
         this.Xs |= cellMask
         // Set the cell text to X
         cell.textContent = 'X'
         // Switch turn to O
         this.turnX = false
-      } else if ((!this.turnX) && (this.Xs ^ cellMask)) { // Check if it's O's turn an the cell is not occupied by X
+      } else if ((!this.turnX) && !(this.Xs & cellMask)) { // Check if it's O's turn an the cell is not occupied by X
         // Set the cell bit to 1 in O
         this.Os |= cellMask
         // Set cell text to O
